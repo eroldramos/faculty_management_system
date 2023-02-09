@@ -1,0 +1,30 @@
+{% extends 'main.html' %} 
+{% block title %}Research{% endblock title  %} 
+{% block content %} 
+{% load static %} 
+<h2>Research Detail</h2>
+<div class="row justify-content-center" >
+    <div class="col col-lg-8 "> 
+      <a href="{%url 'faculty-research'%}"><i class="bx bx-arrow-back" style="font-size: 30px;"></i></a>
+        <div class="card border-primary mb-3" style="max-width: 100%;">
+            <div class="card-header">{{research.status.status}}</div>
+            <div class="card-body">
+              <h4 class="card-title">{{research.title}}</h4>
+              <small>Details:</small>
+              <p class="card-text">{{research.detail}}</p>
+
+              <small>Content:</small>
+              <p class="card-text">{{research.content}}</p>
+
+              <small>Researcher:</small>
+              <p class="card-text">{{research.user.first_name}} {{research.user.last_name}}</p>
+
+              <small>View or Download:</small>
+              <p class="card-text"><a href="{{research.file.url}}" target="_blank">{{research.filename}}</a></p>
+            </div>
+          </div>
+   
+    </div>
+  </div>
+
+{% endblock content %}

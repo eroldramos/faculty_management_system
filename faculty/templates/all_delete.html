@@ -1,0 +1,28 @@
+{% extends 'main.html' %} 
+{% block title %}Delete{% endblock title  %} 
+{% block content %} 
+{% load static %} 
+
+<h2>Delete {{label}}</h2>
+<div class="container-fluid my-4">
+    <div class="row justify-content-center">
+      <div class="col col-lg-8">
+        <div class="card border-primary mb-3">
+          <div class="card-header">
+            <a href="{{link}}"><i class="bx bx-arrow-back" style="font-size: 30px;"></i></a>
+            
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Are you sure you want to delete "{{obj}}"?</h4>
+            <form action="" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary" style="float: right">
+                Delete
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

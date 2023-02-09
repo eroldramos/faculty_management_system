@@ -1,0 +1,106 @@
+{% extends 'main.html' %} 
+{% block title %}Extension Service{% endblock title  %} 
+{% block content %} 
+{% load static %} 
+<h2>My Extension Service</h2>
+
+<div class="row">
+    
+    <div class="col col-lg-12">
+        <form class="d-flex my-3" action="" method="GET">
+            <input class="form-control me-sm-2" type="search" placeholder="Search" name="search" value="{{search}}">
+            <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
+            <button class="btn btn-primary my-2 my-sm-0 ms-1" type="button" onclick="window.location.href=`{% url 'faculty-add-own-extension-service' %}`">Add Own</button>
+            <button class="btn btn-primary my-2 my-sm-0 ms-1" type="button" onclick="window.location.href=`{% url 'faculty-add-preset-extension-service' %}`">Add Preset</button>
+            <button type="button" class="btn btn-primary my-2 my-sm-0 d-flex justify-content-center ms-1 export_pdf_btn" style="height:fit-content">
+              <i class="bx bx-printer nav_icon mx-2"></i>
+             Print
+            </button>
+          </form>
+        <table class="table table-hover" id="table_data">
+            <thead>
+              <tr class="table-primary">
+                <th scope="col">ID</th>
+                <th scope="col">TITLE</th>
+                <th scope="col">DETAIL</th>
+                <th scope="col">PROJECTS</th>
+                <th scope="col">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for data in table_data %} 
+
+              <tr class="table-secondary">
+                <th scope="row">{{data.extension.id}}</th>
+                <td>{{ data.extension.title }}</td>
+                <td>{{ data.extension.detail }}</td>
+                <td>
+
+                  <div class="accordion" id="accordionExample" >
+                    <div class="accordion-item" >
+                        <h2 class="accordion-header" id="heading{{data.id}}">
+                          <button class="accordion-button collapsed"  type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{data.id}}" aria-expanded="false" aria-controls="collapse{{data.id}}">
+                            Projects
+                          </button>
+                        </h2>
+                        <div id="collapse{{data.id}}" style= "width: 100%"class="accordion-collapse collapse" aria-labelledby="heading{{data.id}}" data-bs-parent="#accordionExample" >
+                          <div class="accordion-body">
+                            <div class="list-group">
+                              {% for project in data.extension.project_set.all %}
+                              <a  class="list-group-item list-group-item-action"  ><strong>{{ forloop.counter }}.)</strong>  {{project.project_detail}}</a>
+                              {% endfor %}
+
+                              {% if data.extension.project_set.all|length == 0 %}
+                                <p style="text-align:center;">No Project</p>
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      
+                    </div>
+
+                </td>
+                <td>
+
+                    <a href="{% url 'faculty-edit-extension-service' data.extension.id %}" class="card-link">
+                        <i class="bx bx-edit-alt nav_icon px-3"></i>
+                      </a> 
+
+                      <a href="{% url 'faculty-delete-extension-service' data.extension.id %}" class="card-link">
+                        <i class="bx bx-trash nav_icon px-3"></i>
+                      </a>
+
+                </td>
+              </tr>
+              {% endfor %}
+
+            
+          
+            </tbody>
+          </table>
+    </div>
+</div>
+{% include 'global_pagination.html' %}
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+<script type="text/javascript">
+
+document.querySelector('.export_pdf_btn').addEventListener("click", () => {
+    const invoice = document.getElementById("table_data");
+
+            var opt = {
+                margin: 1,
+                filename: 'MyExtensionService.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape'}
+            };
+            html2pdf().from(invoice).set(opt).save();
+ })
+
+ </script>
+{%endblock content%}

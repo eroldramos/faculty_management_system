@@ -1,0 +1,193 @@
+{% extends 'main.html' %} 
+{% block title %}Manage Research{% endblock title  %} 
+{% block content %} 
+{% load static %} 
+
+
+<style>
+  div.scrollmenu {
+    background-color: #ddd;
+    overflow: auto;
+    white-space: nowrap;
+  }
+  
+  div.scrollmenu a {
+    display: inline-block;
+    color: black;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+  }
+  div.scrollmenu a.active{
+      background-color: #777;  
+      color:#fff;
+  }
+  div.scrollmenu a:hover {
+    background-color: #777;
+    color:#fff;
+  }
+  </style>
+
+<h2>Manage Research</h2>
+
+<div class="row">
+    
+    <div class="col col-lg-12">
+        <form class="d-flex my-3" action="" method="GET">
+            <input class="form-control me-sm-2" type="search" placeholder="Search" name="search" value="{{search}}">
+            <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
+            <button type="button" class="btn btn-primary my-2 my-sm-0 d-flex justify-content-center ms-1 export_pdf_btn" >
+              <i class="bx bx-printer nav_icon mx-2"></i>
+             Print
+            </button>
+          </form>
+
+          <div class="scrollmenu my-3">
+            <a href="{%url 'research-coordinator-faculty'%}" class="{% if search == '' %}active{% endif %}">All</a>
+            {% for status in status %}
+            <a href="{%url 'research-coordinator-faculty'%}?search={{status.status}}&page={{page}}" class="{% if status.status == search %}active{% endif %}">{{status.status}}</a>
+            {% endfor %}
+            
+        </div>
+        <table class="table table-hover" id="table_data">
+            <thead>
+              <tr class="table-primary">
+                <th scope="col">ID</th>
+                <th scope="col">NAME</th>
+                <th scope="col">USERNAME</th>
+                <th scope="col">EMAIL</th>
+                <th scope="col">DEPARTMENT</th>
+                <th scope="col">RESEARCH</th>
+                <th scope="col">ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for faculty in faculty %}
+ 
+              <tr class="table-secondary">
+                <th scope="row">{{faculty.id}}</th>
+                <td>{{faculty.first_name}} {{faculty.last_name}}</td>
+                <td>{{faculty.username}}</td>
+                <td>{{faculty.email}}</td>
+                <td>{{faculty.department.title}}</td>
+                <td>
+
+                  <div class="accordion" id="accordionExample" >
+                    <div class="accordion-item" >
+                        <h2 class="accordion-header" id="heading{{faculty.id}}">
+                          <button class="accordion-button collapsed"  type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{faculty.id}}" aria-expanded="false" aria-controls="collapse{{faculty.id}}">
+                            Click to see
+                          </button>
+                        </h2>
+                        <div id="collapse{{faculty.id}}" style= "width: 100%"class="accordion-collapse collapse" aria-labelledby="heading{{faculty.id}}" data-bs-parent="#accordionExample" >
+                          <div class="accordion-body">
+                            <div class="list-group">
+                              {% for research in faculty.research_set.all %}
+                              <a  class="list-group-item list-group-item-action"  ><strong>{{ forloop.counter }}.)</strong>  {{research.title}} ({{research.status.status}})</a>
+                              {% endfor %}
+                              {% if faculty.research_set.all|length == 0 %}
+                              <p style="text-align:center;">No Research</p>
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      
+                    </div>
+
+                </td>
+                <td>
+                  <button onclick="window.location.href=`{%url 'research-coordinator-faculty'%}?search={{search}}&page={{page}}&faculty_id={{faculty.id}}`" type="button" class="btn btn-primary " style="width:100%" {% if faculty.research_set.all|length == 0 %}disabled{%endif%}>Generate Research</button>
+                </td>
+              
+              </tr>
+              {% endfor %}
+
+            
+          
+            </tbody>
+          </table>
+          {% include 'admin_faculty_pagination.html' %}
+
+
+          {% if faculty_id  != 0%}
+          <div class="d-grid gap-2 col-3 mx-auto my-3"> 
+            <button type="button" class="btn btn-primary btn-lg btn-block d-flex justify-content-center export_pdf_btn2">
+              <i class="bx bx-printer nav_icon mx-2"></i>
+              Generate Research Report 
+            </button>
+          </div>
+          <table class="table table-hover" id="table_data2">
+            <thead>
+              <tr class="table-primary">
+                <th scope="col">ID</th>
+                <th scope="col">RESEARCHER</th>
+                <th scope="col">TITLE</th>
+                <th scope="col">DETAIL</th>
+                <th scope="col">STATUS</th>
+                <th scope="col">FILENAME</th>
+              </tr>
+            </thead>
+            <tbody>
+        
+             
+
+
+              {% for data in table_data %} 
+
+              <tr class="table-secondary">
+                <th scope="row">{{data.id}}</th>
+                <td>{{ data.user.first_name }} {{ data.user.last_name }}</td>
+                <td>{{ data.title }}</td>
+                <td>{{ data.detail }}</td>
+                <td>{{ data.status }}</td>
+                <td>{{ data.filename }}</td>
+              </tr>
+              {% endfor %}
+
+            
+          
+            </tbody>
+          </table>
+          {% include 'global_pagination.html' %}
+          {%endif%}
+    </div>
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+<script type="text/javascript">
+
+document.querySelector('.export_pdf_btn').addEventListener("click", () => {
+    const invoice = document.getElementById("table_data");
+
+            var opt = {
+                margin: 1,
+                filename: 'ListOfFacultyWithResearch.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape'}
+            };
+            html2pdf().from(invoice).set(opt).save();
+ })
+
+ document.querySelector('.export_pdf_btn2').addEventListener("click", () => {
+    const invoice = document.getElementById("table_data2");
+
+            var opt = {
+                margin: 1,
+                filename: '{{faculty_to_be_print.first_name}}_{{faculty_to_be_print.last_name}}_Research.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape'}
+            };
+            html2pdf().from(invoice).set(opt).save();
+ })
+
+ </script>
+
+
+{%endblock content%}    

@@ -1,0 +1,44 @@
+{% extends 'main.html' %} 
+{% block title %}Subject{% endblock title  %} 
+{% block content %} 
+{% load static %} 
+
+<h2>{{label|title}} Subject</h2>
+<div class="container-fluid">
+
+    <div class="row justify-content-center" style="margin-bottom:3%">
+      <div class="col col-lg-6">
+        <form action="" method="POST">
+  
+  
+            <a href="{{link}}"><i class="bx bx-arrow-back" style="font-size: 30px;"></i></a>
+   
+          <h3 style="margin: 0%;"> {{label}} subject</h3>
+          
+          {%csrf_token %}
+  
+          <div class="col-sm-12">
+              {% for fields in form %}
+            <div class="form-group">
+              <label for="" class="form-label mt-4"> {{fields.label}}</label> </label>
+              {{ fields }}
+            </div>
+            {% endfor %}
+          </div>
+  
+          <div class="form-group">
+            <br />
+         
+            <div class="d-grid gap-2 col-6 mx-auto my-3"> 
+              <button type="submit" class="btn btn-primary btn-lg btn-block">
+                {{label}}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock content %}

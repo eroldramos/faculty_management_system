@@ -1,0 +1,101 @@
+{% extends 'main.html' %} 
+{% block title %}Research{% endblock title  %} 
+{% block content %} 
+{% load static %} 
+
+<style>
+    #header_all{
+    height: 30vh;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: #325D88 0px 3px 8px;
+    background: #F7F6FB;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 0 0 20px 20px;
+}
+.header_text{
+    text-align: center;
+    font-size: 5vh;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bolder;
+}
+.input_searchD{
+    margin: 0 1rem;
+    padding: .7rem 0;
+    text-indent: 10px;
+}
+
+</style>
+
+<div class="row  justify-content-center" id="header_all">
+    <div class="col col-lg-12">
+      <p class="header_text">Research and Studies</p>
+      <form class="d-flex sm-1" action="" method="GET">
+        <input
+          class="form-control me-sm-1 input_searchD"
+          type="search"
+          placeholder="Search for related studies"
+          name="search"
+          value="{{search}}"
+        />
+        <button class="btn btn-primary my-2 my-sm-0 search_btn mx-1" type="submit">
+          Search
+        </button>
+        <button class="btn btn-primary my-2 my-sm-0 search_btn mx-1" type="button" onclick="window.location.href=`{%url 'faculty-add-research'%}`">
+            Add my Research
+          </button>
+          <button class="btn btn-primary my-2 my-sm-0 search_btn mx-1" type="button" onclick="window.location.href=`{%url 'faculty-my-research'%}`">
+            My Research
+          </button>
+          
+      </form>
+    </div>
+  </div>
+
+<div class="row justify-content-center px-3">
+
+    <div class="col col-lg-10 col-md-12">
+        {% for data in table_data %}
+    <a href="{% url 'faculty-research-detail' data.id %}">
+      <div class="card border-primary mb-3" style="max-width: 100%;">
+        <div class="card-header">{{data.status.status}}</div>
+        <div class="card-body">
+          <h4 class="card-title">{{data.title}}</h4>
+          <p class="card-text">{{data.detail}}</p>
+        </div>
+      </div>
+    </a>
+        {% endfor %}
+
+     
+        {% include 'global_pagination.html' %}
+    </div>
+    
+    
+    <div class="col col-lg-2 col-md-4 d-lg-block d-sm-none d-md-block d-none">
+        <div class="card border-primary mb-3" style="max-width: 100%;">
+            <div class="card-header">Filter By</div>
+            <div class="card-body">
+                <ul class="list-group">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{% url 'faculty-research' %}">All</a>
+                    <span class="badge bg-primary rounded-pill">{{research_all|length}}</span>
+                  </li>
+                    {% for status in status %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'faculty-research' %}?search={{status.status}}&page=1">{{status.status}}</a>
+                        <span class="badge bg-primary rounded-pill">{{status.research_set.all.count}}</span>
+                      </li>
+                    {% endfor %}
+                  </ul>
+            </div>
+          </div>
+    </div>
+
+  </div>
+  
+{% endblock content %}

@@ -1,0 +1,112 @@
+{% extends 'main.html' %} 
+{% block title %}Extension Service{% endblock title  %} 
+{% block content %} 
+{% load static %} 
+
+<h2>{{label|title}} Extension Service</h2>
+<div class="container-fluid">
+
+    <div class="row justify-content-center" style="margin-bottom:3%">
+      <div class="col col-lg-6">
+        <form action="" method="POST" enctype="multipart/form-data">
+  
+  
+            <a href="{{link}}"><i class="bx bx-arrow-back" style="font-size: 30px;"></i></a>
+   
+          <h3 style="margin: 0%;"> {{label}} extension service</h3>
+          
+          {%csrf_token %}
+  
+          <div class="col-sm-12">
+              {% for fields in form %}
+            <div class="form-group">
+              <label for="" class="form-label mt-4"> {{fields.label}}</label> </label>
+              {{ fields }}
+            </div>
+            {% endfor %}
+          </div>
+  
+          <div class="form-group">
+            <br />
+         
+            <div class="d-grid gap-2 col-6 mx-auto my-3"> 
+              <button type="submit" class="btn btn-primary btn-lg btn-block">
+                {{label}}
+              </button>
+            </div>
+          </div>
+        </form>
+
+
+        <!-- Project Form -->
+        {% if label == 'update' %}
+        <form action="" method="POST">
+  
+        <h3 style="margin: 0%;"> Add Project / Program to this extension</h3>
+        
+        {%csrf_token %}
+
+        <div class="col-sm-12">
+            {% for fields in project_form %}
+          <div class="form-group">
+            <label for="" class="form-label mt-4"> {{fields.label}}</label> </label>
+            {{ fields }}
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          <br />
+       
+          <div class="d-grid gap-2 col-6 mx-auto my-3"> 
+            <button type="submit" class="btn btn-primary btn-lg btn-block">
+              Add Project
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div class="list-group">
+        {% for project in extension.project_set.all %}
+        <a  class="list-group-item list-group-item-action"><strong>{{ forloop.counter }}.)</strong>  {{project.project_detail}} <i onclick="deleteProject('{{project.id}}')" class="bx bx-x-circle" style="font-size: 30px; position:absolute; right:0;color:red; cursor: pointer;"></i></a>
+        {% endfor %}
+      </div>
+
+
+      <script>
+    async function deleteProject(id){
+
+  const response = await fetch(`/delete-project/${id}`, {
+    method: "GET",
+    // body:  {
+    //     csrfmiddlewaretoken : document.getElementsByName('csrfmiddlewaretoken')[0].value,
+    //   },
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: 'same-origin'
+  });
+  
+  if (!response.ok) {
+    alert('Something went wrong!')
+    // console.log(response.json())
+    return
+  }
+  //if dont receive error
+  // const data = await response.json();
+  
+  window.location.reload()
+
+}
+      </script>
+        {% endif %}
+
+    
+
+ 
+      </div>
+    </div>
+  </div>
+
+
+{% endblock content %}

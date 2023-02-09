@@ -1,0 +1,159 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&display=swap" rel="stylesheet">
+  
+    <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}">
+    <!-- Bootstrap CSS -->
+   
+
+    <link rel="stylesheet" href="{% static 'css/login_register_bootstrap.min.css' %}">
+    
+    <!-- Style -->
+    <link rel="stylesheet" href="{% static 'css/login_register_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- Tab icon-->
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/tab_logo.png' %}">
+    <style>
+      .alert-error {
+  background-color: #f8d7da;
+  color: #842029;
+}
+    </style>
+    <title>Login</title>
+  </head>
+  <body>
+  
+
+  <div class="d-lg-flex half">
+
+    {% with link="images/background.png" %}
+    <div class="bg order-1 order-md-1" id="bg_left">
+    {% endwith %}
+      <div class="container">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-md-7 d-lg-flex align-items-center justify-content-center">
+                <div>
+                    <img src="{% static 'images/cict_logo.png' %}" alt="profile" height="320" width="320">
+                    <p class="mb-4 font-weight-bold">CICT-FMS</p>
+                </div>
+              </div>
+        </div>
+      </div>
+    </div>
+    <div class="contents order-2 order-md-2 px-4">
+      <div class="container">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-md-7">
+
+            
+            <h3 class="create_text" style="font-size: 2rem; margin-top: 3rem; font-family: Roboto">Login</h3>
+            <p class="mb-4" >Hello again!<br> Sign in here to continue.</p>
+            {% if messages %}  
+            {% for message in messages %} 
+            <div{% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible fade show"{% endif %} role="alert">
+              <strong>{% if message.tags %} {{ message.tags }}! {% endif %}</strong> {{ message }}
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+            {% endfor %}
+            {% endif %}  
+            <form action="" method="post">
+              {% csrf_token %}
+              <div class="form-group first">
+                <label for="username">Email or username</label>
+                <input required type="text" class="form-control" placeholder="Your email address or username" id="username" name="username">
+              </div>
+              <div class="form-group mb-3">
+                <label for="password">Password</label>
+                <input required type="password" class="form-control" placeholder="Enter your password" id="password" name="password">
+              </div>
+              
+              <div class="d-flex mb-5 align-items-center">
+                <label class="control control--checkbox mb-0"><span class="caption">Remember me</span>
+                  <input type="checkbox" id="keep_logA"/>
+                  <div class="control__indicator"></div>
+                </label>
+         
+              </div>
+
+              <input type="submit" value="Login" class="btn btn-block btn-primary" id="login_btn" onclick="lsRememberMe1()">
+
+              <div class="d-flex mb-5 align-items-center caption">
+                <span>Don't have an account? <a href="{% url 'register' %}" style="color: #2b4f74 !important">Signup now.</a></span> 
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
+  <script
+  src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+  integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+  integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+  crossorigin="anonymous"
+></script>
+  </body>
+</html>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+//   $(document).ready(function(){
+//     $(document).keydown(function(e){
+  
+//         if(e.which == "121"){
+//             var win = window.open('/admin-login', '_blank');
+//             if (win) {
+//                 //Browser has allowed it to be opened
+//                 win.focus();
+//             } 
+//         }
+//     })
+
+// })
+</script>
+
+<script>
+const rmCheck1 = document.getElementById("keep_logA"),
+emailInput1 = document.getElementById("username");
+passInput1 = document.getElementById("password");
+
+if (localStorage.checkbox1 && localStorage.checkbox1 !== "") {
+  rmCheck1.setAttribute("checked", "checked");
+  emailInput1.value = localStorage.username1;
+  passInput1.value = localStorage.password1;
+} else {
+  rmCheck1.removeAttribute("checked");
+  emailInput1.value = "";
+  passInput1.value = "";
+}
+
+function lsRememberMe1() {
+  if (rmCheck1.checked && emailInput1.value !== "") {
+    localStorage.username1 = emailInput1.value;
+    localStorage.password1 = passInput1.value
+    localStorage.checkbox1 = rmCheck1.value;
+  } else {
+    localStorage.username1 = "";
+    localStorage.password1 = "";
+    localStorage.checkbox1 = "";
+  }
+}
+</script>

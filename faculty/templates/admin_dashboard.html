@@ -1,0 +1,165 @@
+{% extends 'main.html' %} 
+{% block title %}Dashboard{% endblock title  %} 
+{% block content %} 
+{% load static %} 
+<h2>Dashboard</h2>
+<div class="row">
+    <div class="col-lg-12" style="width: 100%;display: flex;flex-wrap: wrap;justify-content: center;">
+        <div class="card text-white bg-primary mb-3 mx-3" style="max-width: 35rem; max-height: 35rem;">
+            <div class="card-header">Faculty</div>
+            <div class="card-body">
+              <div id="faculty-chart"></div>  
+            </div>
+          </div>
+          <div class="card text-white bg-secondary mb-3 mx-3" style="max-width: 35rem; max-height: 35rem;">
+            <div class="card-header">Research</div>
+            <div class="card-body">
+              <div id="research-chart"></div>
+            </div>
+          </div>
+          <div class="card text-white bg-success mb-3 mx-3" style="max-width: 35rem; max-height: 35rem;">
+            <div class="card-header">Extension Service</div>
+            <div class="card-body">
+              <div id="extension-chart"></div>
+            </div>
+          </div>
+          <div class="card text-white bg-danger mb-3 mx-3" style="max-width: 35rem; max-height: 35rem;">
+            <div class="card-header">Subject</div>
+            <div class="card-body">
+              <div id="subject-chart"></div>
+            </div>
+          </div>
+
+          <div class="card text-white bg-warning mb-3 mx-3" style="max-width: 35rem; max-height: 35rem;">
+            <div class="card-header">Department</div>
+            <div class="card-body">
+              <div id="department-chart"></div>
+            </div>
+          </div>
+      
+
+          <!-- <script src="https://cdn.anychart.com/js/8.0.1/anychart-core.min.js"></script>
+          <script src="https://cdn.anychart.com/js/8.0.1/anychart-pie.min.js"></script> -->
+          <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-base.min.js"></script>
+
+
+<script>
+    
+
+
+
+
+  anychart.onDocumentReady(function() {
+
+    fetch('/get-dashboard-information', {
+  method: 'GET', // or 'PUT'
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+  .then((response) => response.json())
+  .then((data) => {
+    console.log('Success:', data);
+    dashboard(data)
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+
+
+function dashboard( response_data ){
+  
+    //PIE CHART
+// set the data
+var facultyData = [
+    {x: "Faculty", value: response_data.faculty_data.faculty_count},
+    {x: "Department Head", value: response_data.faculty_data.dept_head_count},
+    {x: "Research Coordinator", value: response_data.faculty_data.research_coor_count},
+    {x: "Extension Coordinator", value: response_data.faculty_data.faculty_count},
+
+];
+
+// create the chart
+var facultyChart = anychart.pie();
+
+// set the chart title
+facultyChart.title("Faculty");
+
+// add the data
+facultyChart.data(facultyData);
+
+// display the chart in the container
+facultyChart.container('faculty-chart');
+facultyChart.draw();
+
+//  BAR CHART
+var researchData = response_data.research_data
+
+// create a chart
+var researchChart = anychart.bar();
+
+// create a bar series and set the data
+var series = researchChart.bar(researchData);
+
+// set the container id
+researchChart.container("research-chart");
+
+// initiate drawing the chart
+researchChart.draw();
+
+//  COLUMN CHART
+var extensionData = response_data.extension_data
+
+// create a chart
+var extensionChart = anychart.column();
+
+// create a column series and set the data
+var series = extensionChart.column(extensionData);
+
+// set the container id
+extensionChart.container("extension-chart");
+
+// initiate drawing the chart
+extensionChart.draw();
+
+
+// SUBJECT
+var subjectData = response_data.subject_data
+
+// create a pie chart and set the subjectData
+var subjectChart = anychart.pie(subjectData);
+
+/* set the inner radius
+(to turn the pie subjectChart into a doughnut subjectChart)*/
+subjectChart.innerRadius("30%");
+
+// set the container id
+subjectChart.container("subject-chart");
+
+// initiate drawing the subjectChart
+subjectChart.draw();
+
+// DEPARTMENT CHART
+var departmentData = response_data.department_data
+
+// create the chart
+var departmentChart = anychart.pie();
+
+// set the chart title
+departmentChart.title("Department");
+
+// add the data
+departmentChart.data(departmentData);
+
+// display the chart in the container
+departmentChart.container('department-chart');
+departmentChart.draw();
+
+}
+ 
+});
+</script>
+         
+    </div>
+</div>
+{% endblock content %}

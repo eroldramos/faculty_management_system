@@ -1,0 +1,85 @@
+{% extends 'main.html' %} 
+{% block title %}Research{% endblock title  %} 
+{% block content %} 
+{% load static %} 
+<h2>My Research</h2>
+<div class="row">
+    <div class="col col-lg-12">
+        <form class="d-flex my-3" action="" method="GET">
+            <input class="form-control me-sm-2" type="search" placeholder="Search" name="search" value="{{search}}">
+            <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
+            <button class="btn btn-primary my-2 my-sm-0 ms-1" type="button" onclick="window.location.href=`{% url 'faculty-add-research' %}`">Add</button>
+            <button type="button" class="btn btn-primary my-2 my-sm-0 d-flex justify-content-center ms-1 export_pdf_btn" style="height:fit-content">
+              <i class="bx bx-printer nav_icon mx-2"></i>
+             Print
+            </button>
+            </form>
+        <table class="table table-hover" id="table_data">
+            <thead>
+              <tr class="table-primary">
+                <th scope="col">ID</th>
+                <th scope="col">TITLE</th>
+                <th scope="col">DETAIL</th>
+                <th scope="col">STATUS</th>
+                <th scope="col">FILENAME</th>
+                <th scope="col">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+        
+             
+
+
+              {% for data in table_data %} 
+
+              <tr class="table-secondary">
+                <th scope="row">{{data.id}}</th>
+                <td>{{ data.title }}</td>
+                <td>{{ data.detail }}</td>
+                <td>{{ data.status }}</td>
+                <td>{{ data.filename }}</td>
+                <td>
+
+                    <a href="{% url 'faculty-edit-research' data.id %}" class="card-link">
+                        <i class="bx bx-edit-alt nav_icon px-3"></i>
+                      </a> 
+
+                      <a href="{% url 'faculty-delete-research' data.id %}" class="card-link">
+                        <i class="bx bx-trash nav_icon px-3"></i>
+                      </a>
+
+                      <a href="{{data.file.url}}" target="_blank" class="card-link">
+                        <i class="bx bx-link-external nav_icon px-3"></i>
+                      </a>
+
+                </td>
+              </tr>
+              {% endfor %}
+
+            
+          
+            </tbody>
+          </table>
+    </div>
+</div>
+{% include 'global_pagination.html' %}
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+<script type="text/javascript">
+
+document.querySelector('.export_pdf_btn').addEventListener("click", () => {
+    const invoice = document.getElementById("table_data");
+
+            var opt = {
+                margin: 1,
+                filename: 'MyResearch.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape'}
+            };
+            html2pdf().from(invoice).set(opt).save();
+ })
+
+ </script>
+{%endblock content%}

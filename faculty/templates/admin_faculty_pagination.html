@@ -1,0 +1,36 @@
+{% if faculty|length == 0 %}
+<div class="d-flex justify-content-center">
+  <div class="box border border-primary rounded">
+   <i class="bx bx-question-mark" style="font-size: 10rem;"></i>
+   <p style="font-size:large; text-align:center">No Data found</p>
+
+  </div>
+</div>
+{%endif%}
+<div class="row justify-content-center">
+    <div class="col col-lg-6">
+        <ul class="pagination justify-content-center">
+          <div class="pagination px-3 py-3">
+            {% if faculty.has_previous %}
+            <li class="page-item"><a class="page-link" href="?search={{search}}&page=1">&laquo First</a></li>
+            <li class="page-item"><a class="page-link" href="?search={{search}}&page={{ faculty.previous_page_number }}">Previous</a></li>
+            {% endif %}
+          
+          
+            {% for i in faculty.paginator.page_range %}
+            {% if faculty.number == i %}
+            <li class="page-item active"><a class="page-link" href="?search={{search}}&page={{i}}">{{i}}</a></li>
+            {% elif i > faculty.number|add:'-3' and i < faculty.number|add:'3' %}
+            <li class="page-item"><a class="page-link" href="?search={{search}}&page={{i}}">{{i}}</a></li>
+            {% endif %}
+            {% endfor %}
+      
+            {% if faculty.has_next %}
+            <li class="page-item"><a class="page-link" href="?search={{search}}&page={{faculty.next_page_number}}">Next</a></li>
+            <li class="page-item"><a class="page-link" href="?search={{search}}&page={{ faculty.paginator.num_pages  }}">Last &raquo</a></li>
+            {% endif %}
+        </ul>
+    </div>
+  </div>
+
+  
